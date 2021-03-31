@@ -1,6 +1,20 @@
 #include "lemipc.h"
 
-void
+static bool
+team_won(char team) {
+	char * map = g_ipc.shm;
+
+	sem_op(MAP_SEM, -1, 0);
+	for (size_t p = 0; p < MAP_X * MAP_Y; ++p)
+		if (map[p] != MAP_EMPTY && map[p] != team) {
+			sem_op(MAP_SEM, 1, 0);
+			return (false);
+		}
+	sem_op(MAP_SEM, 1, 0);
+	return (true);
+}
+
+static void
 init_pos(t_pos * pos, char team) {
 	char *		map = g_ipc.shm;
 
@@ -16,8 +30,10 @@ play(char team) {
 	t_pos	pos;
 	
 	init_pos(&pos, team);
-	while (1) {
+	sleep(1);
+	while (!team_won(team)) {
 		printf("my team is %c\n", team);
 		sleep(5);
 	}
+	printf("Team %c WON!\n", team);
 }
