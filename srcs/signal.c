@@ -1,9 +1,9 @@
 #include "lemipc.h"
 
 void
-sigint_handler(int signal) {
+sig_handler(int signal) {
 	printf("Catching singnal: %i\n", signal);
-	shm_destroy();
 	sem_destroy();
+	shm_destroy();
 	exit(0);
 }

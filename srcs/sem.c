@@ -10,7 +10,7 @@ sem_init(void) {
 	}
 	else
 	{
-		semp_op(0, 1, 0);
+		sem_op(0, 1, 0);
 		printf("SEM created.\n");
 	}
 	printf("SEM value: %i\n", semctl(g_ipc.semid, 0, GETVAL));

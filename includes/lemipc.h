@@ -19,6 +19,8 @@
 # define MAP_Y			10
 # define MAP_EMPTY		'.'
 
+# define MAP_SEM		0
+
 typedef struct	s_ipc
 {
 	int		shmid;
@@ -50,7 +52,7 @@ t_pos map_get_random_pos(void);
 /* utils.c */
 void perror_exit(char const *msg);
 /* signal.c */
-void sigint_handler(int signal);
+void sig_handler(int signal);
 /* play.c */
 void play(char team);
 #endif
