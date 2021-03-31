@@ -15,8 +15,8 @@
 
 # define KEY			0x42
 # define SHM_SIZE		200
-# define MAP_X			10
-# define MAP_Y			10
+# define MAP_X			5
+# define MAP_Y			5
 # define MAP_EMPTY		'.'
 
 # define MAP_SEM		0
@@ -50,6 +50,7 @@ void map_init(void);
 int map_display(void);
 t_pos map_get_random_pos(void);
 /* utils.c */
+void error_exit(char const *msg);
 void perror_exit(char const *msg);
 /* signal.c */
 void sig_handler(int signal);

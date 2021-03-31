@@ -28,12 +28,10 @@ map_get_random_pos(void) {
 	size_t		i_pos = 0;
 
 	srand(time(NULL));
-	sem_op(MAP_SEM, -1, 0);
 	char *		map = g_ipc.shm;
 	for (size_t p = 0; p < MAP_X * MAP_Y; ++p)
 			if (map[p] == MAP_EMPTY)
 				available_pos[i_pos++] = (t_pos){p % MAP_X, p / MAP_X};
-	sem_op(MAP_SEM, 1, 0);
 	if (i_pos == 0)
 		return ((t_pos){-1, -1});
 	return (available_pos[rand() % i_pos]);
