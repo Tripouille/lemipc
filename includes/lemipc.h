@@ -21,13 +21,12 @@
 
 # define BUFFER_SIZE	(sizeof(long) * 2)
 # define KEY			0x42
-# define SHM_SIZE		200
 # define MAP_X			5
 # define MAP_Y			5
+# define SHM_SIZE		(MAP_X * MAP_Y)
 # define MAP_EMPTY		'.'
 
 # define MAP_SEM		0
-
 # define DISPLAY		-1
 
 typedef struct	s_ipc
