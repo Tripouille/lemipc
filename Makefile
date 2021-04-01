@@ -1,6 +1,7 @@
 NAME	= lemipc
 SRCS	= $(addprefix srcs/, main.c shm.c sem.c msg.c \
-							utils.c signal.c map.c play.c)
+							utils.c signal.c map.c play.c \
+							play_utils.c)
 OBJS	= $(SRCS:srcs/%.c=objs/%.o)
 DEPS	= $(SRCS:srcs/%.c=deps/%.d)
 
@@ -14,7 +15,7 @@ $(OBJS): objs/%.o: srcs/%.c
 	$(CC) $(CFLAGS) $(DFLAGS) -c $< -o $@
 
 $(NAME): $(OBJS)
-	$(CC) $^ -o $(NAME)
+	$(CC) $^ -lm -o $(NAME)
 
 clean:
 	rm -rf $(OBJS) $(DEPS) *.dSYM

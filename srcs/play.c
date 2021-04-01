@@ -1,39 +1,5 @@
 #include "lemipc.h"
 
-static bool
-is_enemmy(t_pos * pos) {
-	char map_value = g_ipc.shm[pos_to_indice(pos)];
-	return (map_value!= g_player.team && map_value != MAP_EMPTY);
-}
-
-static bool
-is_ally(t_pos * pos) {
-	char map_value = g_ipc.shm[pos_to_indice(pos)];
-	return (map_value == g_player.team
-	&& !(pos->x == g_player.pos.x && pos->y == g_player.pos.y));
-}
-
-size_t
-pos_is_in_map(t_pos * pos) {
-	return (pos->x >= 0 && pos->x < MAP_X
-	&& pos->y >= 0 && pos->y < MAP_Y);
-}
-
-size_t
-pos_to_indice(t_pos * pos) {
-	return (pos->y * MAP_X + pos->x);
-}
-
-static bool
-team_won(void) {
-	char * map = g_ipc.shm;
-
-	for (size_t p = 0; p < MAP_X * MAP_Y; ++p)
-		if (map[p] != MAP_EMPTY && map[p] != g_player.team)
-			return (false);
-	return (true);
-}
-
 static void
 init_pos(void) {
 	char *		map = g_ipc.shm;
@@ -46,26 +12,26 @@ init_pos(void) {
 }
 
 static t_pos
-scan(t_pos * pos, int max_range, bool (*is_target)(t_pos *)) {
+scan(t_pos * pos, int max_range, bool (*is_valid_target)(t_pos *)) {
 	for (int range = 1; range <= max_range; ++range) {
 		t_pos	start = {pos->x - range, pos->y - range};
 		for (; start.x < pos->x + range; ++start.x)
-			if (pos_is_in_map(&start) && is_target(&start))
+			if (pos_is_in_map(&start) && is_valid_target(&start))
 				return (start);
 		for (; start.y < pos->y + range; ++start.y)
-			if (pos_is_in_map(&start) && is_target(&start))
+			if (pos_is_in_map(&start) && is_valid_target(&start))
 				return (start);
 		for (; start.x > pos->x - range; --start.x)
-			if (pos_is_in_map(&start) && is_target(&start))
+			if (pos_is_in_map(&start) && is_valid_target(&start))
 				return (start);
 		for (; start.y > pos->y - range; --start.y)
-			if (pos_is_in_map(&start) && is_target(&start))
+			if (pos_is_in_map(&start) && is_valid_target(&start))
 				return (start);
 	}
 	return ((t_pos){-1, -1});
 }
 
-void
+static void
 move(void) {
 	t_pos		enemy_pos = scan(&g_player.pos, max(MAP_Y, MAP_X), is_enemmy);
 
@@ -80,11 +46,13 @@ move(void) {
 			printf("no ally detected.\n");
 		else {
 			printf("Scan detect ally at pos x: %i, y: %i\n", ally_pos.x, ally_pos.y);
+			t_pos closest_pos = closest_available_pos(&ally_pos, &enemy_pos);
+			printf("closest_pos for ally x: %i, y: %i\n", closest_pos.x, closest_pos.y);
 			t_msg	msg;
 			((int*)(&msg.type))[0] = ally_pos.x;
 			((int*)(&msg.type))[1] = ally_pos.y;
-			((int*)(msg.s))[0] = g_player.pos.x;
-			((int*)(msg.s))[1] = g_player.pos.y;
+			((int*)(msg.s))[0] = closest_pos.x;
+			((int*)(msg.s))[1] = closest_pos.y;
 			msg_send(&msg);
 		}
 	}
@@ -97,10 +65,10 @@ play(void) {
 	init_pos(); sleep(PLAYER_WARMUP);
 	while (1) {
 		sem_op(MAP_SEM, -1, 0);
-		move();
 		if (msg_receive()) {
 			printf("Message receive: x %i y %i\n",((int*)g_player.msg)[2],  ((int*)g_player.msg)[3]);
 		}
+		move();
 		if (team_won()) {
 			map[pos_to_indice(&g_player.pos)] = MAP_EMPTY;
 			sem_op(MAP_SEM, 1, 0);

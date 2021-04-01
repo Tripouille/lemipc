@@ -12,6 +12,7 @@
 # include <stdbool.h>
 # include <string.h>
 # include <signal.h>
+# include <math.h>
 # include <time.h>
 
 
@@ -82,11 +83,17 @@ ssize_t min(ssize_t value1, ssize_t value2);
 ssize_t max(ssize_t value1, ssize_t value2);
 void error_exit(char const *msg);
 void perror_exit(char const *msg);
+double dist(t_pos * start, t_pos * end);
 /* signal.c */
 void sig_handler(int signal);
 /* play.c */
 void play(void);
+/* play_utils.c */
+bool is_enemmy(t_pos * pos);
+bool is_ally(t_pos * pos);
 size_t pos_is_in_map(t_pos * pos);
 size_t pos_to_indice(t_pos * pos);
-
+bool team_won(void);
+int available_pos_around_target(t_pos * target);
+t_pos closest_available_pos(t_pos * start, t_pos * target);
 #endif

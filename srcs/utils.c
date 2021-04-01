@@ -25,3 +25,8 @@ perror_exit(char const *msg) {
 	sem_destroy();
 	exit(1);
 }
+
+double
+dist(t_pos * start, t_pos * end) {
+	return (sqrt(pow(start->x - end->x, 2) + pow(start->y - end->y, 2)));
+}

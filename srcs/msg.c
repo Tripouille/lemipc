@@ -27,7 +27,7 @@ msg_receive(void) {
 
 	((int*)(&type))[0] = g_player.pos.x;
 	((int*)(&type))[1] = g_player.pos.y;
-	if (msgrcv(g_ipc.msgid, g_player.msg, BUFFER_SIZE, type, IPC_NOWAIT) < 0) {
+	if (msgrcv(g_ipc.msgid, g_player.msg, BUFFER_SIZE, type, IPC_NOWAIT) < 0) { //while
 		if (errno == ENOMSG)
 			printf("No new message.\n");
 		else
