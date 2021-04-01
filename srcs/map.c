@@ -6,12 +6,19 @@ map_init(void) {
 	memset(g_ipc.shm, MAP_EMPTY, MAP_Y * MAP_X);
 }
 
-int map_display(void) {
+int
+map_display(void) {
 	char * map = g_ipc.shm;
 
+	sleep(5);
 	while (1) {
-		printf("Map display: \n");
 		sem_op(MAP_SEM, -1, 0);
+		if (map_is_empty()) {
+			printf("Map is empty.\n");
+			sem_op(MAP_SEM, 1, 0);
+			break;
+		}
+		printf("Map display: \n");
 		for (size_t y = 0; y < MAP_Y; ++y) {
 			write(1, map + (y * MAP_X), MAP_X);
 			write(1, "\n", 1);
@@ -20,6 +27,17 @@ int map_display(void) {
 		sleep(1);
 	}
 	return (0);
+}
+
+bool
+map_is_empty(void) {
+	char * map = g_ipc.shm;
+	for (size_t p = 0; p < MAP_X * MAP_Y; ++p)
+		if (map[p] != MAP_EMPTY) {
+			sem_op(MAP_SEM, 1, 0);
+			return (false);
+		}
+	return (true);
 }
 
 t_pos

@@ -20,13 +20,9 @@ static bool
 team_won(char team) {
 	char * map = g_ipc.shm;
 
-	sem_op(MAP_SEM, -1, 0);
 	for (size_t p = 0; p < MAP_X * MAP_Y; ++p)
-		if (map[p] != MAP_EMPTY && map[p] != team) {
-			sem_op(MAP_SEM, 1, 0);
+		if (map[p] != MAP_EMPTY && map[p] != team)
 			return (false);
-		}
-	sem_op(MAP_SEM, 1, 0);
 	return (true);
 }
 
@@ -66,9 +62,9 @@ move(t_pos *pos, char team) {
 	int			range = 1;
 	t_pos		enemy_pos;
 
-	while (range < MAP_Y
+	while (range < MAP_Y + 1
 	&& (enemy_pos = scan(pos, team, map, range)).x == -1) // a revoir
-		range++;
+		++range;
 	if (enemy_pos.x == -1)
 		printf("team: %c no enemy detected.\n", team);
 	else
@@ -77,16 +73,21 @@ move(t_pos *pos, char team) {
 
 void
 play(char team) {
-	t_pos	pos;
+	char *		map = g_ipc.shm;
+	t_pos		pos;
 	
 	init_pos(&pos, team); sleep(3);
 
 	while (1) {
 		sem_op(MAP_SEM, -1, 0);
+		while(1);
 		move(&pos, team);
-		if (team_won(team))
+		if (team_won(team)) {
+			map[pos_to_indice(&pos)] = MAP_EMPTY;
+			//sem_op(MAP_SEM, 1, 0);
 			break;
-		sem_op(MAP_SEM, 1, 0);
+		}
+		//sem_op(MAP_SEM, 1, 0);
 		sleep(5);
 	}
 	printf("Team %c WON!\n", team);

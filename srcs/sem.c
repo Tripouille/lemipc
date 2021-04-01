@@ -3,7 +3,7 @@
 void
 sem_init(void) {
 	if ((g_ipc.semid = semget(KEY, 1, IPC_CREAT | IPC_EXCL | 0600)) < 0) {
-		if (errno == EEXIST && semget(KEY, 1, 0600) >= 0)
+		if (errno == EEXIST && (g_ipc.semid = semget(KEY, 1, 0600)) >= 0)
 			printf("SEM loaded.\n");
 		else
 			perror_exit("semget");

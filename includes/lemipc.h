@@ -48,6 +48,7 @@ void sem_destroy(void);
 /* map.c */
 void map_init(void);
 int map_display(void);
+bool map_is_empty(void);
 t_pos map_get_random_pos(void);
 /* utils.c */
 void error_exit(char const *msg);
