@@ -21,6 +21,8 @@
 
 # define MAP_SEM		0
 
+# define DISPLAY		-1
+
 typedef struct	s_ipc
 {
 	int		shmid;
@@ -36,7 +38,14 @@ typedef struct	s_pos
 	int		y;
 }				t_pos;
 
-extern t_ipc	g_ipc;
+typedef struct	s_player
+{
+	char		team;
+	t_pos		pos;
+}				t_player;
+
+extern		t_ipc		g_ipc;
+extern		t_player	g_player;
 
 /* shm.c */
 void shm_init(void);
@@ -51,10 +60,14 @@ int map_display(void);
 bool map_is_empty(void);
 t_pos map_get_random_pos(void);
 /* utils.c */
+ssize_t min(ssize_t value1, ssize_t value2);
+ssize_t max(ssize_t value1, ssize_t value2);
 void error_exit(char const *msg);
 void perror_exit(char const *msg);
 /* signal.c */
 void sig_handler(int signal);
 /* play.c */
-void play(char team);
+void play(void);
+size_t pos_is_in_map(t_pos * pos);
+size_t pos_to_indice(t_pos * pos);
 #endif

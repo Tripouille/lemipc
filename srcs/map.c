@@ -9,6 +9,7 @@ map_init(void) {
 int
 map_display(void) {
 	char * map = g_ipc.shm;
+	g_player.pos.x = -1;
 
 	sleep(5);
 	while (1) {
@@ -33,10 +34,8 @@ bool
 map_is_empty(void) {
 	char * map = g_ipc.shm;
 	for (size_t p = 0; p < MAP_X * MAP_Y; ++p)
-		if (map[p] != MAP_EMPTY) {
-			sem_op(MAP_SEM, 1, 0);
+		if (map[p] != MAP_EMPTY)
 			return (false);
-		}
 	return (true);
 }
 
