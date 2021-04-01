@@ -15,6 +15,7 @@ sig_handler(int signal) {
 	if (map_is_empty()) {
 		sem_destroy();
 		shm_destroy();
+		msg_destroy();
 	}
 	exit(0);
 }

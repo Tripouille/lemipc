@@ -11,6 +11,7 @@ int main(int ac, char ** av) {
 	g_player.team = ac == 1 ? DISPLAY : av[1][0];
 	shm_init();
 	sem_init();
+	msg_init();
 	if (ac == 1)
 		map_display();
 	else if (ac == 2 && strlen(av[1]) == 1)
@@ -20,6 +21,7 @@ int main(int ac, char ** av) {
 	if (map_is_empty()) {
 		sem_destroy();
 		shm_destroy();
+		msg_destroy();
 	}
 	return (0);
 }

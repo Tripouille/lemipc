@@ -4,6 +4,7 @@
 # include <sys/ipc.h>
 # include <sys/shm.h>
 # include <sys/sem.h>
+# include <sys/msg.h>
 # include <errno.h>
 # include <stdio.h>
 # include <stdlib.h>
@@ -13,6 +14,7 @@
 # include <signal.h>
 # include <time.h>
 
+# define BUFFER_SIZE	(sizeof(long) * 2)
 # define KEY			0x42
 # define SHM_SIZE		200
 # define MAP_X			5
@@ -29,7 +31,7 @@ typedef struct	s_ipc
 	char	*shm;
 
 	int 	semid;
-
+	int		msgid;
 }				t_ipc;
 
 typedef struct	s_pos
@@ -42,7 +44,14 @@ typedef struct	s_player
 {
 	char		team;
 	t_pos		pos;
+	char		msg[BUFFER_SIZE];
 }				t_player;
+
+typedef struct	s_msg
+{
+	long	type;
+	char	s[sizeof(long)];
+}				t_msg;
 
 extern		t_ipc		g_ipc;
 extern		t_player	g_player;
@@ -54,6 +63,11 @@ void shm_destroy(void);
 void sem_init(void);
 void sem_op(unsigned short num, short op, short flags);
 void sem_destroy(void);
+/* msg.c */
+void msg_init(void);
+void msg_send(t_msg * msg);
+bool msg_receive(void);
+void msg_destroy(void);
 /* map.c */
 void map_init(void);
 int map_display(void);
@@ -70,4 +84,5 @@ void sig_handler(int signal);
 void play(void);
 size_t pos_is_in_map(t_pos * pos);
 size_t pos_to_indice(t_pos * pos);
+
 #endif

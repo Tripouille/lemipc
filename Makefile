@@ -1,5 +1,5 @@
 NAME	= lemipc
-SRCS	= $(addprefix srcs/, main.c shm.c sem.c \
+SRCS	= $(addprefix srcs/, main.c shm.c sem.c msg.c \
 							utils.c signal.c map.c play.c)
 OBJS	= $(SRCS:srcs/%.c=objs/%.o)
 DEPS	= $(SRCS:srcs/%.c=deps/%.d)
