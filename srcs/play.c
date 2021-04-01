@@ -32,6 +32,19 @@ scan(t_pos * pos, int max_range, bool (*is_valid_target)(t_pos *)) {
 }
 
 static void
+attack(t_pos * enemy, t_pos * ally) {
+	printf("Scan detect ally at pos x: %i, y: %i\n", ally->x, ally->y);
+	t_pos closest_pos = closest_available_pos(ally, enemy);
+	printf("closest_pos for ally x: %i, y: %i\n", closest_pos.x, closest_pos.y);
+	t_msg	msg;
+	((int*)(&msg.type))[0] = ally->x;
+	((int*)(&msg.type))[1] = ally->y;
+	((int*)(msg.s))[0] = closest_pos.x;
+	((int*)(msg.s))[1] = closest_pos.y;
+	msg_send(&msg);
+}
+
+static void
 move(void) {
 	t_pos		enemy_pos = scan(&g_player.pos, max(MAP_Y, MAP_X), is_enemmy);
 
@@ -44,17 +57,8 @@ move(void) {
 		t_pos		ally_pos = scan(&enemy_pos, max(MAP_Y, MAP_X), is_ally);
 		if (ally_pos.x == -1)
 			printf("no ally detected.\n");
-		else {
-			printf("Scan detect ally at pos x: %i, y: %i\n", ally_pos.x, ally_pos.y);
-			t_pos closest_pos = closest_available_pos(&ally_pos, &enemy_pos);
-			printf("closest_pos for ally x: %i, y: %i\n", closest_pos.x, closest_pos.y);
-			t_msg	msg;
-			((int*)(&msg.type))[0] = ally_pos.x;
-			((int*)(&msg.type))[1] = ally_pos.y;
-			((int*)(msg.s))[0] = closest_pos.x;
-			((int*)(msg.s))[1] = closest_pos.y;
-			msg_send(&msg);
-		}
+		else
+			attack(&enemy_pos, &ally_pos);
 	}
 }
 
