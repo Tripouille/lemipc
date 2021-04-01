@@ -17,7 +17,9 @@ int main(int ac, char ** av) {
 		play();
 	else
 		dprintf(2, "Invalid arguments");
-	sem_destroy();
-	shm_destroy();
+	if (map_is_empty()) {
+		sem_destroy();
+		shm_destroy();
+	}
 	return (0);
 }

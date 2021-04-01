@@ -12,7 +12,9 @@ sig_handler(int signal) {
 		g_ipc.shm[pos_to_indice(&g_player.pos)] = MAP_EMPTY;
 		sem_op(MAP_SEM, 1, 0);
 	}
-	sem_destroy();
-	shm_destroy();
+	if (map_is_empty()) {
+		sem_destroy();
+		shm_destroy();
+	}
 	exit(0);
 }
