@@ -94,7 +94,7 @@ void
 play(void) {
 	char *		map = g_ipc.shm;
 	
-	init_pos(); sleep(3);
+	init_pos(); sleep(PLAYER_WARMUP);
 	while (1) {
 		sem_op(MAP_SEM, -1, 0);
 		move();
@@ -107,7 +107,7 @@ play(void) {
 			break;
 		}
 		sem_op(MAP_SEM, 1, 0);
-		sleep(5);
+		sleep(PLAYER_CD);
 	}
 	printf("Team %c WON!\n", g_player.team);
 }

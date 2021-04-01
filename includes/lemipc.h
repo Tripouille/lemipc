@@ -14,6 +14,11 @@
 # include <signal.h>
 # include <time.h>
 
+
+# define PLAYER_CD			2
+# define DISPLAY_CD			2
+# define PLAYER_WARMUP		5
+
 # define BUFFER_SIZE	(sizeof(long) * 2)
 # define KEY			0x42
 # define SHM_SIZE		200

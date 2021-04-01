@@ -11,7 +11,7 @@ map_display(void) {
 	char * map = g_ipc.shm;
 	g_player.pos.x = -1;
 
-	sleep(5);
+	sleep(PLAYER_WARMUP);
 	while (1) {
 		sem_op(MAP_SEM, -1, 0);
 		if (map_is_empty()) {
@@ -25,7 +25,7 @@ map_display(void) {
 			write(1, "\n", 1);
 		}
 		sem_op(MAP_SEM, 1, 0);
-		sleep(1);
+		sleep(DISPLAY_CD);
 	}
 	return (0);
 }
