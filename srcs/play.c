@@ -41,16 +41,16 @@ static t_pos
 scan(t_pos *pos, char team, char * map, int range) {
 	t_pos	start = {pos->x - range, pos->y - range};
 
-	for (int right = 0; right < range * 2 + 1; ++right, start.x = start.x + right)
+	for (; start.x < pos->x + range; ++start.x)
 		if (pos_is_in_map(&start) && is_enemmy(map[pos_to_indice(&start)], team))
 			return (start);
-	for (int down = 0; down < range * 2 + 1; ++down, start.y = start.y + down)
-		if (pos_is_in_map(&start)&& is_enemmy(map[pos_to_indice(&start)], team))
-			return (start);
-	for (int left = 0; left < range * 2 + 1; ++left, start.x = start.x - left)
+	for (; start.y < pos->y + range; ++start.y)
 		if (pos_is_in_map(&start) && is_enemmy(map[pos_to_indice(&start)], team))
 			return (start);
-	for (int up = 0; up < range * 2 + 1; ++up, start.y = start.y - up)
+	for (; start.x > pos->x - range; --start.x)
+		if (pos_is_in_map(&start) && is_enemmy(map[pos_to_indice(&start)], team))
+			return (start);
+	for (; start.y > pos->y - range; --start.y)
 		if (pos_is_in_map(&start) && is_enemmy(map[pos_to_indice(&start)], team))
 			return (start);
 	return ((t_pos){-1, -1});
@@ -80,14 +80,13 @@ play(char team) {
 
 	while (1) {
 		sem_op(MAP_SEM, -1, 0);
-		while(1);
 		move(&pos, team);
 		if (team_won(team)) {
 			map[pos_to_indice(&pos)] = MAP_EMPTY;
-			//sem_op(MAP_SEM, 1, 0);
+			sem_op(MAP_SEM, 1, 0);
 			break;
 		}
-		//sem_op(MAP_SEM, 1, 0);
+		sem_op(MAP_SEM, 1, 0);
 		sleep(5);
 	}
 	printf("Team %c WON!\n", team);
