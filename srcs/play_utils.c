@@ -42,9 +42,11 @@ available_pos_around_target(t_pos * target) {
 	posible_pos[2] = (t_pos){target->x, target->y + 1}; //bottom
 	posible_pos[3] = (t_pos){target->x - 1, target->y}; //right
 	int		result = 0;
+	char *	map = g_ipc.shm;
 
 	for (int i = 0; i < 4; ++i)
-		if (pos_is_in_map(posible_pos + i))
+		if (pos_is_in_map(posible_pos + i)
+		&& map[pos_to_indice(posible_pos + 1)] != MAP_EMPTY)
 			++result;
 	return (result);
 }
