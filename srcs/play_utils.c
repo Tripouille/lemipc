@@ -1,9 +1,22 @@
 #include "lemipc.h"
 
 bool
-is_enemmy(t_pos * pos) {
+is_empty(t_pos * pos) {
 	char map_value = g_ipc.shm[pos_to_indice(pos)];
-	return (map_value!= g_player.team && map_value != MAP_EMPTY);
+	return (map_value == MAP_EMPTY);
+}
+
+bool
+is_enemy(t_pos * pos) {
+	char map_value = g_ipc.shm[pos_to_indice(pos)];
+	return (map_value != g_player.team && map_value != MAP_EMPTY);
+}
+
+bool
+is_valuable_enemy(t_pos * pos) {
+	return (is_enemy(pos) && at_range(pos, is_ally) < 2
+	&& ((at_range(pos, is_ally) && at_range(pos, is_empty))
+		|| at_range(pos, is_empty) > 1));
 }
 
 bool
@@ -35,39 +48,17 @@ team_won(void) {
 }
 
 int
-available_pos_around_target(t_pos * target) {
-	t_pos	posible_pos[4];
-	posible_pos[0] = (t_pos){target->x, target->y - 1}; //top
-	posible_pos[1] = (t_pos){target->x + 1, target->y}; //left
-	posible_pos[2] = (t_pos){target->x, target->y + 1}; //bottom
-	posible_pos[3] = (t_pos){target->x - 1, target->y}; //right
+at_range(t_pos *target, bool (*is_required_type)(t_pos * pos)) {
 	int		result = 0;
-	char *	map = g_ipc.shm;
+	t_pos	posible_pos[4] = {
+		{target->x, target->y + 1},
+		{target->x, target->y - 1},
+		{target->x + 1, target->y},
+		{target->x - 1, target->y}
+	};
 
 	for (int i = 0; i < 4; ++i)
-		if (pos_is_in_map(posible_pos + i)
-		&& map[pos_to_indice(posible_pos + 1)] != MAP_EMPTY)
+		if (pos_is_in_map(posible_pos + i) && is_required_type(posible_pos + i))
 			++result;
 	return (result);
-}
-
-t_pos
-closest_available_pos(t_pos * start, t_pos * target) {
-	double	closest_dist = 1E10;
-	t_pos	closest_pos = {-1, -1};
-	t_pos	posible_pos[4];
-	posible_pos[0] = (t_pos){target->x, target->y - 1}; //top
-	posible_pos[1] = (t_pos){target->x + 1, target->y}; //left
-	posible_pos[2] = (t_pos){target->x, target->y + 1}; //bottom
-	posible_pos[3] = (t_pos){target->x - 1, target->y}; //right
-
-	for (int i = 0; i < 4; ++i) {
-		double actual_dist = dist(start, posible_pos + i);
-		if (pos_is_in_map(posible_pos + i)
-		&& actual_dist < closest_dist) {
-			closest_dist = actual_dist;
-			closest_pos = posible_pos[i];
-		}
-	}
-	return (closest_pos);
 }

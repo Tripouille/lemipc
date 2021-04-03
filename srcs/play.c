@@ -32,34 +32,41 @@ scan(t_pos * pos, int max_range, bool (*is_valid_target)(t_pos *)) {
 }
 
 static void
-attack(t_pos * enemy, t_pos * ally) {
-	printf("Scan detect ally at pos x: %i, y: %i\n", ally->x, ally->y);
-	t_pos closest_pos = closest_available_pos(ally, enemy);
-	printf("closest_pos for ally x: %i, y: %i\n", closest_pos.x, closest_pos.y);
+contact_closest_ally(t_pos * ally, t_pos dest) {
+	printf("Contacting ally at pos x: %i, y: %i\n", ally->x, ally->y);
 	t_msg	msg;
 	((int*)(&msg.type))[0] = ally->x;
 	((int*)(&msg.type))[1] = ally->y;
-	((int*)(msg.s))[0] = closest_pos.x;
-	((int*)(msg.s))[1] = closest_pos.y;
+	((int*)(msg.s))[0] = dest.x;
+	((int*)(msg.s))[1] = dest.y;
 	msg_send(&msg);
 }
 
 static void
+attack(t_pos * enemy) {
+	printf("Enemy at pos x: %i, y: %i\n", enemy->x, enemy->y);
+	if (at_range(enemy, is_ally)) {
+		printf("Yeah! gonna help my ally\n");
+		return ;
+	}
+	t_pos		closest_ally_pos = scan(enemy, max(MAP_Y, MAP_X), is_ally);
+	if (closest_ally_pos.x == -1) {
+		printf("Grrr I've no ally\n");
+		return ;
+	}
+	else
+		contact_closest_ally(&closest_ally_pos, (t_pos){-1, -1});
+}
+
+static void
 move(void) {
-	t_pos		enemy_pos = scan(&g_player.pos, max(MAP_Y, MAP_X), is_enemmy);
+	t_pos		enemy_pos = scan(&g_player.pos, max(MAP_Y, MAP_X), is_valuable_enemy);
 
 	printf("Player x %i y %i scanning for enemy !\n", g_player.pos.x, g_player.pos.y);
 	if (enemy_pos.x == -1)
-		printf("Scan detect no enemy.\n");
-	else {
-		printf("Scan detect enemy at pos x: %i, y: %i\n", enemy_pos.x, enemy_pos.y);
-		printf("Scanning for ally !\n");
-		t_pos		ally_pos = scan(&enemy_pos, max(MAP_Y, MAP_X), is_ally);
-		if (ally_pos.x == -1)
-			printf("no ally detected.\n");
-		else
-			attack(&enemy_pos, &ally_pos);
-	}
+		printf("No valuable enemy detected.\n");
+	else
+		attack(&enemy_pos);
 }
 
 void
@@ -69,15 +76,17 @@ play(void) {
 	init_pos(); sleep(PLAYER_WARMUP);
 	while (1) {
 		sem_op(MAP_SEM, -1, 0);
-		if (msg_receive()) {
-			printf("Message receive: x %i y %i\n",((int*)g_player.msg)[2],  ((int*)g_player.msg)[3]);
-		}
-		move();
+		//Turn start
 		if (team_won()) {
 			map[pos_to_indice(&g_player.pos)] = MAP_EMPTY;
 			sem_op(MAP_SEM, 1, 0);
 			break;
 		}
+		if (msg_receive()) {
+			printf("Message receive: x %i y %i\n",((int*)g_player.msg)[2],  ((int*)g_player.msg)[3]);
+		}
+		move();
+		//Turn end
 		sem_op(MAP_SEM, 1, 0);
 		sleep(PLAYER_CD);
 	}

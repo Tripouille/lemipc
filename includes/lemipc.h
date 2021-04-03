@@ -84,11 +84,12 @@ void sig_handler(int signal);
 /* play.c */
 void play(void);
 /* play_utils.c */
-bool is_enemmy(t_pos * pos);
+bool is_empty(t_pos * pos);
+bool is_enemy(t_pos * pos);
+bool is_valuable_enemy(t_pos * pos);
 bool is_ally(t_pos * pos);
 size_t pos_is_in_map(t_pos * pos);
 size_t pos_to_indice(t_pos * pos);
 bool team_won(void);
-int available_pos_around_target(t_pos * target);
-t_pos closest_available_pos(t_pos * start, t_pos * target);
+int at_range(t_pos *target, bool (*is_required_type)(t_pos * pos));
 #endif
