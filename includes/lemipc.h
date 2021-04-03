@@ -14,6 +14,7 @@
 # include <signal.h>
 # include <math.h>
 # include <time.h>
+# include "list.h"
 
 
 # define PLAYER_CD			2
@@ -38,12 +39,6 @@ typedef struct	s_ipc
 	int 	semid;
 	int		msgid;
 }				t_ipc;
-
-typedef struct	s_pos
-{
-	int		x;
-	int		y;
-}				t_pos;
 
 typedef struct	s_player
 {
