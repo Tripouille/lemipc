@@ -68,6 +68,7 @@ attack(t_pos * enemy) {
 	if (at_range(enemy, is_ally)) {
 		list_sort(available_pos, by_dist, &g_player.pos);
 		printf("Yeah! I'm gonna help my ally going x %i y %i\n", available_pos->head->pos.x, available_pos->head->pos.y);
+		move(list_shift(available_pos));
 	}
 	else if (closest_ally_pos.x != -1) {
 		list_sort(available_pos, by_dist, &g_player.pos);
@@ -105,7 +106,9 @@ play(void) {
 			clear_actual_slot();
 		}
 		else if (msg_receive()) {
-			printf("Message receive: x %i y %i\n",((int*)g_player.msg)[2],  ((int*)g_player.msg)[3]);
+			t_pos	receive_pos = {((int*)g_player.msg)[2], ((int*)g_player.msg)[3]};
+			printf("Order receive: x %i y %i\n", receive_pos.x,  receive_pos.y);
+			move(receive_pos);
 		}
 		else if (at_range(&g_player.pos, is_enemy)) {
 			printf("I'm fighting!\n");
