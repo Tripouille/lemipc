@@ -2,7 +2,8 @@ NAME	= lemipc
 SRCS	= $(addprefix srcs/, main.c shm.c sem.c msg.c \
 							utils.c signal.c map.c play.c \
 							play_utils.c \
-							$(addprefix plist/, plist.c plist_utils.c plist_sort.c))
+							$(addprefix plist/, plist.c plist_utils.c plist_sort.c) \
+							$(addprefix nlist/, nlist.c nlist_utils.c nlist_sort.c))
 OBJS	= $(SRCS:srcs/%.c=objs/%.o)
 DEPS	= $(SRCS:srcs/%.c=deps/%.d)
 
