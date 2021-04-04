@@ -15,7 +15,7 @@ im_dead(void) {
 	};
 	for (int i = 0; i < 8; ++i)
 		for (int j = i + 1; j < 8; ++j)
-			if (is_enemy(posible_pos + i)
+			if (pos_is_in_map(posible_pos + i) && is_enemy(posible_pos + i)
 			&& map[pos_to_indice(posible_pos + i)] == map[pos_to_indice(posible_pos + j)])
 				return (true);
 	return (false);
