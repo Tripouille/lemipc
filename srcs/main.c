@@ -3,7 +3,9 @@
 t_ipc		g_ipc;
 t_player	g_player;
 
-int main(int ac, char ** av) { (void)ac; (void)av;
+int main(int ac, char ** av) {
+	if (ac == 2 && strlen(av[1]) > 1)
+		error_exit("Invalid arguments");
 	signal(SIGINT, sig_handler);
 	signal(SIGHUP, sig_handler);
 	signal(SIGKILL, sig_handler);
@@ -16,8 +18,6 @@ int main(int ac, char ** av) { (void)ac; (void)av;
 		map_display();
 	else if (ac == 2 && strlen(av[1]) == 1)
 		play();
-	else
-		dprintf(2, "Invalid arguments");
 	if (map_is_empty()) {
 		sem_destroy();
 		shm_destroy();
