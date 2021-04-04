@@ -62,3 +62,25 @@ at_range(t_pos *target, bool (*is_required_type)(t_pos * pos)) {
 			++result;
 	return (result);
 }
+
+t_list *
+get_available_pos_at_range(t_pos *target) {
+	t_pos	posible_pos[4] = {
+		{target->x, target->y + 1},
+		{target->x, target->y - 1},
+		{target->x + 1, target->y},
+		{target->x - 1, target->y}
+	};
+	t_list * available_pos = malloc(sizeof(t_list));
+	if (available_pos == NULL)
+		return (NULL);
+	list_initialize(available_pos);
+
+	for (int i = 0; i < 4; ++i)
+		if (pos_is_in_map(posible_pos + i) && is_empty(posible_pos + i))
+			if (list_push(available_pos, posible_pos[i]) == NULL) {
+				free(available_pos);
+				return (NULL);
+			}
+	return (available_pos);
+}

@@ -1,6 +1,11 @@
 #include "lemipc.h"
 
 static void
+clear_actual_slot(void) {
+	g_ipc.shm[pos_to_indice(&g_player.pos)] = MAP_EMPTY;
+}
+
+static void
 init_pos(void) {
 	char *		map = g_ipc.shm;
 
@@ -33,7 +38,8 @@ scan(t_pos * pos, int max_range, bool (*is_valid_target)(t_pos *)) {
 
 static void
 contact_closest_ally(t_pos * ally, t_pos dest) {
-	printf("Contacting ally at pos x: %i, y: %i\n", ally->x, ally->y);
+
+	printf("Contacting ally at pos x: %i, y: %i giving order x %i y %i\n", ally->x, ally->y, dest.x, dest.y);
 	t_msg	msg;
 	((int*)(&msg.type))[0] = ally->x;
 	((int*)(&msg.type))[1] = ally->y;
@@ -43,26 +49,43 @@ contact_closest_ally(t_pos * ally, t_pos dest) {
 }
 
 static void
-attack(t_pos * enemy) {
-	printf("Enemy at pos x: %i, y: %i\n", enemy->x, enemy->y);
-	if (at_range(enemy, is_ally)) {
-		printf("Yeah! gonna help my ally\n");
-		return ;
-	}
-	t_pos		closest_ally_pos = scan(enemy, max(MAP_Y, MAP_X), is_ally);
-	if (closest_ally_pos.x == -1) {
-		printf("Grrr I've no ally\n");
-		return ;
-	}
-	else
-		contact_closest_ally(&closest_ally_pos, (t_pos){-1, -1});
+move(t_pos new_pos) {
+	printf("I'm going x %i y %i\n", new_pos.x, new_pos.y);
+	clear_actual_slot();
+	g_player.pos = new_pos;
+	g_ipc.shm[pos_to_indice(&g_player.pos)] = g_player.team;
 }
 
 static void
-move(void) {
+attack(t_pos * enemy) {
+	printf("Enemy at pos x: %i, y: %i\n", enemy->x, enemy->y);
+	t_pos		closest_ally_pos = scan(enemy, max(MAP_Y, MAP_X), is_ally);
+	t_list * 	available_pos = get_available_pos_at_range(enemy);
+
+	if (available_pos == NULL) {
+		error_exit("Out of memory.\n");
+	}
+	if (at_range(enemy, is_ally)) {
+		list_sort(available_pos, by_dist, &g_player.pos);
+		printf("Yeah! I'm gonna help my ally going x %i y %i\n", available_pos->head->pos.x, available_pos->head->pos.y);
+	}
+	else if (closest_ally_pos.x != -1) {
+		list_sort(available_pos, by_dist, &g_player.pos);
+		move(list_shift(available_pos));
+		list_sort(available_pos, by_dist, &closest_ally_pos);
+		contact_closest_ally(&closest_ally_pos, list_shift(available_pos));
+	}
+	else
+		printf("Grrr I've no ally\n");
+	list_destroy(available_pos);
+	free(available_pos);
+}
+
+static void
+think(void) {
 	t_pos		enemy_pos = scan(&g_player.pos, max(MAP_Y, MAP_X), is_valuable_enemy);
 
-	printf("Player x %i y %i scanning for enemy !\n", g_player.pos.x, g_player.pos.y);
+	printf("Player x %i y %i scanning for valuable enemy !\n", g_player.pos.x, g_player.pos.y);
 	if (enemy_pos.x == -1)
 		printf("No valuable enemy detected.\n");
 	else
@@ -71,24 +94,26 @@ move(void) {
 
 void
 play(void) {
-	char *		map = g_ipc.shm;
-	
-	init_pos(); sleep(PLAYER_WARMUP);
+	init_pos();
+	sleep(PLAYER_WARMUP);
+
 	while (1) {
 		sem_op(MAP_SEM, -1, 0);
 		//Turn start
 		if (team_won()) {
-			map[pos_to_indice(&g_player.pos)] = MAP_EMPTY;
-			sem_op(MAP_SEM, 1, 0);
-			break;
+			printf("My team WON!\n");
+			clear_actual_slot();
 		}
-		if (msg_receive()) {
+		else if (msg_receive()) {
 			printf("Message receive: x %i y %i\n",((int*)g_player.msg)[2],  ((int*)g_player.msg)[3]);
 		}
-		move();
+		else if (at_range(&g_player.pos, is_enemy)) {
+			printf("I'm fighting!\n");
+		}
+		else
+			think();
 		//Turn end
 		sem_op(MAP_SEM, 1, 0);
 		sleep(PLAYER_CD);
 	}
-	printf("Team %c WON!\n", g_player.team);
 }

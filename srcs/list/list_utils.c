@@ -1,8 +1,8 @@
 #include "list.h"
 
-t_list_element	*create_list_element(t_pos pos, t_list_element *prev,
-									t_list_element *next)
-{
+t_list_element *
+create_list_element(t_pos pos, t_list_element *prev,
+									t_list_element *next) {
 	t_list_element	*new_list_element;
 
 	new_list_element = malloc(sizeof(*new_list_element));
@@ -14,18 +14,16 @@ t_list_element	*create_list_element(t_pos pos, t_list_element *prev,
 	return (new_list_element);
 }
 
-t_list_element	*list_inject(t_list *list, t_pos pos)
-{
+t_list_element *
+list_inject(t_list *list, t_pos pos) {
 	t_list_element	*new_list_element;
 
 	new_list_element = create_list_element(pos, list->tail, list->head);
-	if (new_list_element == NULL)
-	{
+	if (new_list_element == NULL) {
 		list_destroy(list);
 		return (NULL);
 	}
-	if (list->head == NULL)
-	{
+	if (list->head == NULL) {
 		list->head = new_list_element;
 		list->tail = new_list_element;
 	}
@@ -35,32 +33,29 @@ t_list_element	*list_inject(t_list *list, t_pos pos)
 	return (new_list_element);
 }
 
-void	list_destroy(t_list *list)
-{
+void
+list_destroy(t_list *list) {
 	t_list_element	*element;
 	t_list_element	*element_next;
 
 	element = list->head;
-	while (element != list->tail)
-	{
+	while (element != list->tail) {
 		element_next = element->next;
 		free(element);
 		element = element_next;
 	}
 	free(list->tail);
-	list->head = NULL;
-	list->tail = NULL;
+	list_initialize(list);
 }
 
-bool	list_contain(t_list *list, t_pos needle)
-{
+bool
+list_contain(t_list *list, t_pos needle) {
 	t_list_element	*element;
 
 	if (list->head == NULL)
 		return (false);
 	element = list->head;
-	while (element != list->tail)
-	{
+	while (element != list->tail) {
 		if (element->pos.x == needle.x && element->pos.y == needle.y)
 			return (true);
 		element = element->next;
@@ -68,7 +63,7 @@ bool	list_contain(t_list *list, t_pos needle)
 	return (element->pos.x == needle.x && element->pos.y == needle.y);
 }
 
-bool	list_is_empty(t_list *list)
-{
+bool
+list_is_empty(t_list *list) {
 	return (list->head == NULL);
 }

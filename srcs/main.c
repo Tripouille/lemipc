@@ -3,7 +3,7 @@
 t_ipc		g_ipc;
 t_player	g_player;
 
-int main(int ac, char ** av) {
+int main(int ac, char ** av) { (void)ac; (void)av;
 	signal(SIGINT, sig_handler);
 	signal(SIGHUP, sig_handler);
 	signal(SIGKILL, sig_handler);
