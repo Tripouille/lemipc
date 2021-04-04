@@ -3,14 +3,18 @@
 bool
 im_dead(void) {
 	char *	map = g_ipc.shm;
-	t_pos	posible_pos[4] = {
+	t_pos	posible_pos[8] = {
 		{g_player.pos.x, g_player.pos.y + 1},
 		{g_player.pos.x, g_player.pos.y - 1},
 		{g_player.pos.x + 1, g_player.pos.y},
-		{g_player.pos.x - 1, g_player.pos.y}
+		{g_player.pos.x - 1, g_player.pos.y},
+		{g_player.pos.x - 1, g_player.pos.y - 1},
+		{g_player.pos.x + 1, g_player.pos.y - 1},
+		{g_player.pos.x - 1, g_player.pos.y + 1},
+		{g_player.pos.x + 1, g_player.pos.y + 1}
 	};
-	for (int i = 0; i < 4; ++i)
-		for (int j = i + 1; j < 4; ++j)
+	for (int i = 0; i < 8; ++i)
+		for (int j = i + 1; j < 8; ++j)
 			if (is_enemy(posible_pos + i)
 			&& map[pos_to_indice(posible_pos + i)] == map[pos_to_indice(posible_pos + j)])
 				return (true);
@@ -67,14 +71,18 @@ team_won(void) {
 int
 at_range(t_pos *target, bool (*is_required_type)(t_pos * pos)) {
 	int		result = 0;
-	t_pos	posible_pos[4] = {
+	t_pos	posible_pos[8] = {
 		{target->x, target->y + 1},
 		{target->x, target->y - 1},
 		{target->x + 1, target->y},
-		{target->x - 1, target->y}
+		{target->x - 1, target->y},
+		{target->x - 1, target->y - 1},
+		{target->x + 1, target->y - 1},
+		{target->x - 1, target->y + 1},
+		{target->x + 1, target->y + 1}
 	};
 
-	for (int i = 0; i < 4; ++i)
+	for (int i = 0; i < 8; ++i)
 		if (pos_is_in_map(posible_pos + i) && is_required_type(posible_pos + i))
 			++result;
 	return (result);
@@ -82,18 +90,22 @@ at_range(t_pos *target, bool (*is_required_type)(t_pos * pos)) {
 
 t_list *
 get_available_pos_at_range(t_pos *target) {
-	t_pos	posible_pos[4] = {
+	t_pos	posible_pos[8] = {
 		{target->x, target->y + 1},
 		{target->x, target->y - 1},
 		{target->x + 1, target->y},
-		{target->x - 1, target->y}
+		{target->x - 1, target->y},
+		{target->x - 1, target->y - 1},
+		{target->x + 1, target->y - 1},
+		{target->x - 1, target->y + 1},
+		{target->x + 1, target->y + 1}
 	};
 	t_list * available_pos = malloc(sizeof(t_list));
 	if (available_pos == NULL)
 		return (NULL);
 	list_initialize(available_pos);
 
-	for (int i = 0; i < 4; ++i)
+	for (int i = 0; i < 8; ++i)
 		if (pos_is_in_map(posible_pos + i) && is_empty(posible_pos + i))
 			if (list_push(available_pos, posible_pos[i]) == NULL) {
 				free(available_pos);
