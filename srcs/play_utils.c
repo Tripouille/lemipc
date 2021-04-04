@@ -88,7 +88,7 @@ at_range(t_pos *target, bool (*is_required_type)(t_pos * pos)) {
 	return (result);
 }
 
-t_list *
+t_plist *
 get_available_pos_at_range(t_pos *target) {
 	t_pos	posible_pos[8] = {
 		{target->x, target->y + 1},
@@ -100,14 +100,14 @@ get_available_pos_at_range(t_pos *target) {
 		{target->x - 1, target->y + 1},
 		{target->x + 1, target->y + 1}
 	};
-	t_list * available_pos = malloc(sizeof(t_list));
+	t_plist * available_pos = malloc(sizeof(t_plist));
 	if (available_pos == NULL)
 		return (NULL);
-	list_initialize(available_pos);
+	plist_initialize(available_pos);
 
 	for (int i = 0; i < 8; ++i)
 		if (pos_is_in_map(posible_pos + i) && is_empty(posible_pos + i))
-			if (list_push(available_pos, posible_pos[i]) == NULL) {
+			if (plist_push(available_pos, posible_pos[i]) == NULL) {
 				free(available_pos);
 				return (NULL);
 			}

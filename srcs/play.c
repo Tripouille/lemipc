@@ -60,25 +60,25 @@ static void
 attack(t_pos * enemy) {
 	printf("Enemy at pos x: %i, y: %i\n", enemy->x, enemy->y);
 	t_pos		closest_ally_pos = scan(enemy, max(MAP_Y, MAP_X), is_ally);
-	t_list * 	available_pos = get_available_pos_at_range(enemy);
+	t_plist * 	available_pos = get_available_pos_at_range(enemy);
 
 	if (available_pos == NULL) {
 		error_exit("Out of memory.\n");
 	}
 	if (at_range(enemy, is_ally)) {
-		list_sort(available_pos, by_dist, &g_player.pos);
+		plist_sort(available_pos, by_dist, &g_player.pos);
 		printf("Yeah! I'm gonna help my ally going x %i y %i\n", available_pos->head->pos.x, available_pos->head->pos.y);
-		move(list_shift(available_pos));
+		move(plist_shift(available_pos));
 	}
 	else if (closest_ally_pos.x != -1) {
-		list_sort(available_pos, by_dist, &g_player.pos);
-		move(list_shift(available_pos));
-		list_sort(available_pos, by_dist, &closest_ally_pos);
-		contact_closest_ally(&closest_ally_pos, list_shift(available_pos));
+		plist_sort(available_pos, by_dist, &g_player.pos);
+		move(plist_shift(available_pos));
+		plist_sort(available_pos, by_dist, &closest_ally_pos);
+		contact_closest_ally(&closest_ally_pos, plist_shift(available_pos));
 	}
 	else
 		printf("Grrr I've no ally\n");
-	list_destroy(available_pos);
+	plist_destroy(available_pos);
 	free(available_pos);
 }
 

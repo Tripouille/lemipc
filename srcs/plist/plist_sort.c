@@ -1,4 +1,4 @@
-#include "list.h"
+#include "plist.h"
 #include "lemipc.h"
 
 bool
@@ -15,18 +15,18 @@ pos_swap(t_pos * a, t_pos * b) {
 }
 
 void
-list_sort(t_list * list, bool (*comp)(t_pos * a, t_pos * b, t_pos * target),
+plist_sort(t_plist * plist, bool (*comp)(t_pos * a, t_pos * b, t_pos * target),
 			t_pos * target) {
-	t_list_element *	element = list->head;
-	t_list_element *	smallest = NULL;
+	t_plist_element *	element = plist->head;
+	t_plist_element *	smallest = NULL;
 
-	while (element != list->tail) {
+	while (element != plist->tail) {
 		smallest = element;
-		for (t_list_element	* right = element->next; right != list->tail; right = right->next)
+		for (t_plist_element	* right = element->next; right != plist->tail; right = right->next)
 			if (comp(&smallest->pos, &right->pos, target))
 				smallest = right;
-		if (comp(&smallest->pos, &list->tail->pos, target))
-				smallest = list->tail;
+		if (comp(&smallest->pos, &plist->tail->pos, target))
+				smallest = plist->tail;
 		if (element != smallest)
 			pos_swap(&element->pos, &smallest->pos);
 		element = element->next;

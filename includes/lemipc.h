@@ -14,7 +14,7 @@
 # include <signal.h>
 # include <math.h>
 # include <time.h>
-# include "list.h"
+# include "plist.h"
 
 
 # define PLAYER_CD			2
@@ -93,5 +93,5 @@ size_t pos_is_in_map(t_pos * pos);
 size_t pos_to_indice(t_pos * pos);
 bool team_won(void);
 int at_range(t_pos *target, bool (*is_required_type)(t_pos * pos));
-t_list * get_available_pos_at_range(t_pos *target);
+t_plist * get_available_pos_at_range(t_pos *target);
 #endif
