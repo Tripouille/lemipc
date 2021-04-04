@@ -7,9 +7,9 @@
 # include "plist.h"
 
 typedef struct		s_node {
-	struct s_node *		parent;
 	t_pos				pos;
-	double				g, h, f;
+	struct s_node *		parent;
+	double				f, g, h;
 }					t_node;
 
 typedef struct s_nlist_element {
