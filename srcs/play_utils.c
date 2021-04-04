@@ -1,6 +1,23 @@
 #include "lemipc.h"
 
 bool
+im_dead(void) {
+	char *	map = g_ipc.shm;
+	t_pos	posible_pos[4] = {
+		{g_player.pos.x, g_player.pos.y + 1},
+		{g_player.pos.x, g_player.pos.y - 1},
+		{g_player.pos.x + 1, g_player.pos.y},
+		{g_player.pos.x - 1, g_player.pos.y}
+	};
+	for (int i = 0; i < 4; ++i)
+		for (int j = i + 1; j < 4; ++j)
+			if (is_enemy(posible_pos + i)
+			&& map[pos_to_indice(posible_pos + i)] == map[pos_to_indice(posible_pos + j)])
+				return (true);
+	return (false);
+}
+
+bool
 is_empty(t_pos * pos) {
 	char map_value = g_ipc.shm[pos_to_indice(pos)];
 	return (map_value == MAP_EMPTY);

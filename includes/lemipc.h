@@ -84,6 +84,7 @@ void sig_handler(int signal);
 /* play.c */
 void play(void);
 /* play_utils.c */
+bool im_dead(void);
 bool is_empty(t_pos * pos);
 bool is_enemy(t_pos * pos);
 bool is_valuable_enemy(t_pos * pos);

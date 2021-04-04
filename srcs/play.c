@@ -1,7 +1,7 @@
 #include "lemipc.h"
 
 static void
-clear_actual_slot(void) {
+clear_actual_pos(void) {
 	g_ipc.shm[pos_to_indice(&g_player.pos)] = MAP_EMPTY;
 }
 
@@ -51,7 +51,7 @@ contact_closest_ally(t_pos * ally, t_pos dest) {
 static void
 move(t_pos new_pos) {
 	printf("I'm going x %i y %i\n", new_pos.x, new_pos.y);
-	clear_actual_slot();
+	clear_actual_pos();
 	g_player.pos = new_pos;
 	g_ipc.shm[pos_to_indice(&g_player.pos)] = g_player.team;
 }
@@ -103,7 +103,13 @@ play(void) {
 		//Turn start
 		if (team_won()) {
 			printf("My team WON!\n");
-			clear_actual_slot();
+			clear_actual_pos();
+			break ;
+		}
+		else if (im_dead()) {
+			printf("Arghhh... I'm dead.\n");
+			clear_actual_pos();
+			break ;
 		}
 		else if (msg_receive()) {
 			t_pos	receive_pos = {((int*)g_player.msg)[2], ((int*)g_player.msg)[3]};
@@ -119,4 +125,5 @@ play(void) {
 		sem_op(MAP_SEM, 1, 0);
 		sleep(PLAYER_CD);
 	}
+	sem_op(MAP_SEM, 1, 0);
 }
