@@ -133,7 +133,10 @@ play(void) {
 		else if (msg_receive()) {
 			t_pos	receive_pos = {((int*)g_player.msg)[2], ((int*)g_player.msg)[3]};
 			printf("Order receive: x %i y %i\n", receive_pos.x,  receive_pos.y);
-			move(astar(g_player.pos, receive_pos));
+			t_pos next_step = astar(g_player.pos, receive_pos);
+			if (next_step.x == -2) 
+				out_of_memory(NULL);
+			move(next_step);
 		}
 		else
 			think();
