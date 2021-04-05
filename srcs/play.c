@@ -10,8 +10,10 @@ init_pos(void) {
 	char *		map = g_ipc.shm;
 
 	sem_op(MAP_SEM, -1, 0);
-	if ((g_player.pos = map_get_random_pos()).x == -1)
+	if ((g_player.pos = map_get_random_pos()).x == -1) {
+		sem_op(MAP_SEM, 1, 0);
 		error_exit("Map already full.\n");
+	}
 	map[pos_to_indice(&g_player.pos)] = g_player.team;
 	sem_op(MAP_SEM, 1, 0);
 }

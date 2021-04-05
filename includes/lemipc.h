@@ -20,12 +20,12 @@
 
 # define PLAYER_WARMUP		3000000
 # define PLAYER_CD			2000000
-# define DISPLAY_CD			50000
+# define DISPLAY_CD			20000
 
 # define BUFFER_SIZE	(sizeof(long) * 2)
 # define KEY			0x42
-# define MAP_X			20
-# define MAP_Y			20
+# define MAP_X			2
+# define MAP_Y			6
 # define SHM_SIZE		(MAP_X * MAP_Y)
 # define MAP_EMPTY		'.'
 

@@ -6,7 +6,7 @@ sig_handler(int signal) {
 
 	printf("Catching signal: %i\n", signal);
 	if (!g_player.is_my_turn)
-			sem_op(MAP_SEM, -1, 0);
+		sem_op(MAP_SEM, -1, 0);
 	if (g_player.team == DISPLAY)
 		printf("Map display abort.\n");
 	else {
