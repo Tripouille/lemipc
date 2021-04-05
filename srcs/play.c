@@ -50,6 +50,10 @@ contact_closest_ally(t_pos const * ally, t_pos dest) {
 
 static void
 move(t_pos new_pos) {
+	if (new_pos.x == -1) {
+		printf("I can't move\n");
+		return ;
+	}
 	printf("I'm going x %i y %i\n", new_pos.x, new_pos.y);
 	clear_actual_pos();
 	g_player.pos = new_pos;
@@ -68,11 +72,23 @@ attack(t_pos const * enemy) {
 	if (at_range(enemy, is_ally)) {
 		plist_sort(available_pos, by_dist, &g_player.pos);
 		printf("Yeah! I'm gonna help my ally going x %i y %i\n", available_pos->head->pos.x, available_pos->head->pos.y);
-		move(astar(g_player.pos, plist_shift(available_pos)));
+		t_pos next_step = astar(g_player.pos, plist_shift(available_pos));
+		if (next_step.x == -2) {
+			plist_destroy(available_pos);
+			free(available_pos);
+			perror_exit("Out of memory.\n");
+		}
+		move(next_step);
 	}
 	else if (closest_ally_pos.x != -1) {
 		plist_sort(available_pos, by_dist, &g_player.pos);
-		move(astar(g_player.pos, plist_shift(available_pos)));
+		t_pos next_step = astar(g_player.pos, plist_shift(available_pos));
+		if (next_step.x == -2) {
+			plist_destroy(available_pos);
+			free(available_pos);
+			perror_exit("Out of memory.\n");
+		}
+		move(next_step);
 		plist_sort(available_pos, by_dist, &closest_ally_pos);
 		contact_closest_ally(&closest_ally_pos, plist_shift(available_pos));
 	}
@@ -104,7 +120,6 @@ play(void) {
 		//Turn start
 		if (team_won()) {
 			printf("My team WON!\n");
-			clear_actual_pos();
 			break ;
 		}
 		else if (im_dead()) {

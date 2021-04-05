@@ -16,7 +16,7 @@ sig_handler(int signal) {
 		g_ipc.shm[pos_to_indice(&g_player.pos)] = MAP_EMPTY;
 		sem_op(MAP_SEM, 1, 0);
 	}
-	if (map_is_empty()) {
+	if (one_team_won()) {
 		sem_destroy();
 		shm_destroy();
 		msg_destroy();

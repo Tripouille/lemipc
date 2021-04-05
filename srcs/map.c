@@ -15,15 +15,16 @@ map_display(void) {
 	while (1) {
 		sem_op(MAP_SEM, -1, 0);
 		g_player.is_my_turn = true;
-		if (map_is_empty()) {
-			printf("Map is empty.\n");
-			sem_op(MAP_SEM, 1, 0);
-			break;
-		}
 		printf("Map display: \n");
 		for (size_t y = 0; y < MAP_Y; ++y) {
 			write(1, map + (y * MAP_X), MAP_X);
 			write(1, "\n", 1);
+		}
+		if (one_team_won()) {
+			printf("We have the winner.\n");
+			sem_op(MAP_SEM, 1, 0);
+			g_player.is_my_turn = false;
+			break;
 		}
 		sem_op(MAP_SEM, 1, 0);
 		g_player.is_my_turn = false;
@@ -33,11 +34,17 @@ map_display(void) {
 }
 
 bool
-map_is_empty(void) {
+one_team_won(void) {
 	char * map = g_ipc.shm;
-	for (size_t p = 0; p < MAP_X * MAP_Y; ++p)
-		if (map[p] != MAP_EMPTY)
-			return (false);
+	char team = -1;
+	for (size_t p = 0; p < MAP_X * MAP_Y; ++p) {
+		if (map[p] != MAP_EMPTY) {
+			if (team == -1)
+				team = map[p];
+			else if (map[p] != team)
+				return (false);
+		}
+	}
 	return (true);
 }
 

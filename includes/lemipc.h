@@ -20,7 +20,7 @@
 
 # define PLAYER_WARMUP		3000000
 # define PLAYER_CD			2000000
-# define DISPLAY_CD			1000000
+# define DISPLAY_CD			50000
 
 # define BUFFER_SIZE	(sizeof(long) * 2)
 # define KEY			0x42
@@ -73,7 +73,7 @@ void msg_destroy(void);
 /* map.c */
 void map_init(void);
 int map_display(void);
-bool map_is_empty(void);
+bool one_team_won(void);
 t_pos map_get_random_pos(void);
 /* utils.c */
 ssize_t min(ssize_t value1, ssize_t value2);

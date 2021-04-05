@@ -18,7 +18,7 @@ int main(int ac, char ** av) { (void)ac, (void)av;
 		map_display();
 	else if (ac == 2 && strlen(av[1]) == 1)
 		play();
-	if (map_is_empty()) {
+	if (one_team_won()) {
 		sem_destroy();
 		shm_destroy();
 		msg_destroy();
