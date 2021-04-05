@@ -132,9 +132,6 @@ play(void) {
 			printf("Order receive: x %i y %i\n", receive_pos.x,  receive_pos.y);
 			move(astar(g_player.pos, receive_pos));
 		}
-		else if (at_range(&g_player.pos, is_enemy)) {
-			printf("I'm fighting!\n");
-		}
 		else
 			think();
 		//Turn end

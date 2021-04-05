@@ -24,8 +24,8 @@
 
 # define BUFFER_SIZE	(sizeof(long) * 2)
 # define KEY			0x42
-# define MAP_X			10
-# define MAP_Y			10
+# define MAP_X			20
+# define MAP_Y			20
 # define SHM_SIZE		(MAP_X * MAP_Y)
 # define MAP_EMPTY		'.'
 
