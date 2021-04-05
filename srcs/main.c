@@ -3,7 +3,13 @@
 t_ipc		g_ipc;
 t_player	g_player;
 
-int main(int ac, char ** av) {
+int main(int ac, char ** av) { (void)ac, (void)av;
+	shm_init();
+	t_pos start = {0, 0};
+	t_pos end = {4, 4};
+	t_pos next_step = astar(&start, &end);
+	printf("Next Step x %i y %i\n", next_step.x, next_step.y);
+	/*
 	if (ac == 2 && strlen(av[1]) > 1)
 		error_exit("Invalid arguments");
 	signal(SIGINT, sig_handler);
@@ -22,6 +28,6 @@ int main(int ac, char ** av) {
 		sem_destroy();
 		shm_destroy();
 		msg_destroy();
-	}
+	}*/
 	return (0);
 }

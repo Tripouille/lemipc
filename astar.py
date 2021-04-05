@@ -76,7 +76,7 @@ def astar(maze, start, end, entity):
             # Child is on the closed list
             if child.position in [n.position for n in closed_list]:
                 continue
-
+-------------------------------------
             # Create the f, g, and h values
             child.g = current_node.g + 1
             child.h = abs(child.position[0] - end_node.position[0]) + abs(child.position[1] - end_node.position[1])

@@ -15,6 +15,7 @@
 # include <math.h>
 # include <time.h>
 # include "plist.h"
+# include "astar.h"
 
 
 # define PLAYER_CD			2
@@ -23,8 +24,8 @@
 
 # define BUFFER_SIZE	(sizeof(long) * 2)
 # define KEY			0x42
-# define MAP_X			5
-# define MAP_Y			5
+# define MAP_X			10
+# define MAP_Y			10
 # define SHM_SIZE		(MAP_X * MAP_Y)
 # define MAP_EMPTY		'.'
 
