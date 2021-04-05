@@ -32,7 +32,7 @@ perror_exit(char const * msg) {
 	exit(1);
 }
 
-double
+int
 dist(t_pos const * start, t_pos const * end) {
-	return (sqrt(pow(start->x - end->x, 2) + pow(start->y - end->y, 2)));
+	return (abs(start->x - end->x) + abs(start->y - end->y));
 }

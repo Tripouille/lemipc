@@ -17,13 +17,13 @@ $(OBJS): objs/%.o: srcs/%.c
 	$(CC) $(CFLAGS) $(DFLAGS) -c $< -o $@
 
 $(NAME): $(OBJS)
-	$(CC) $^ -lm -o $(NAME)
+	$(CC) $^ -o $(NAME)
 
 clean:
 	rm -rf $(OBJS) $(DEPS) *.dSYM
 
 fclean: clean
-	rm -rf $(LINK) $(NAME)
+	rm -rf $(NAME)
 	rm -rf *.dSYM
 
 re: fclean all

@@ -80,7 +80,7 @@ ssize_t min(ssize_t value1, ssize_t value2);
 ssize_t max(ssize_t value1, ssize_t value2);
 void error_exit(char const * msg);
 void perror_exit(char const * msg);
-double dist(t_pos const * start, t_pos const * end);
+int dist(t_pos const * start, t_pos const * end);
 /* signal.c */
 void sig_handler(int signal);
 /* play.c */
