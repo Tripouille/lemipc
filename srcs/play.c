@@ -61,6 +61,15 @@ move(t_pos new_pos) {
 }
 
 static void
+out_of_memory(t_plist * garbage) {
+	plist_destroy(garbage);
+	free(garbage);
+	clear_actual_pos();
+	sem_op(MAP_SEM, 1, 0);
+	error_exit("Out of memory.\n");
+}
+
+static void
 attack(t_pos const * enemy) {
 	printf("Enemy at pos x: %i, y: %i\n", enemy->x, enemy->y);
 	t_pos		closest_ally_pos = scan(enemy, max(MAP_Y, MAP_X), is_ally);
@@ -73,25 +82,15 @@ attack(t_pos const * enemy) {
 		plist_sort(available_pos, by_dist, &g_player.pos);
 		printf("Yeah! I'm gonna help my ally going x %i y %i\n", available_pos->head->pos.x, available_pos->head->pos.y);
 		t_pos next_step = astar(g_player.pos, plist_shift(available_pos));
-		if (next_step.x == -2) {
-			plist_destroy(available_pos);
-			free(available_pos);
-			clear_actual_pos();
-			sem_op(MAP_SEM, 1, 0);
-			error_exit("Out of memory.\n");
-		}
+		if (next_step.x == -2) 
+			out_of_memory(available_pos);
 		move(next_step);
 	}
 	else if (closest_ally_pos.x != -1) {
 		plist_sort(available_pos, by_dist, &g_player.pos);
 		t_pos next_step = astar(g_player.pos, plist_shift(available_pos));
-		if (next_step.x == -2) {
-			plist_destroy(available_pos);
-			free(available_pos);
-			clear_actual_pos();
-			sem_op(MAP_SEM, 1, 0);
-			error_exit("Out of memory.\n");
-		}
+		if (next_step.x == -2) 
+			out_of_memory(available_pos);
 		move(next_step);
 		plist_sort(available_pos, by_dist, &closest_ally_pos);
 		contact_closest_ally(&closest_ally_pos, plist_shift(available_pos));

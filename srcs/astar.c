@@ -52,6 +52,8 @@ astar(t_pos start, t_pos end) {
 		return (start);
 	nlist_initialize(&open_nlist);
 	nlist_initialize(&closed_nlist);
+	if (g_player.team == 'B')
+		return (clear_astar(&open_nlist, &closed_nlist));
 	if (nlist_push(&open_nlist, create_node(start, NULL)) == NULL)
 		return (clear_astar(&open_nlist, &closed_nlist));
 	while (!nlist_is_empty(&open_nlist)) {
