@@ -76,7 +76,9 @@ attack(t_pos const * enemy) {
 		if (next_step.x == -2) {
 			plist_destroy(available_pos);
 			free(available_pos);
-			perror_exit("Out of memory.\n");
+			clear_actual_pos();
+			sem_op(MAP_SEM, 1, 0);
+			error_exit("Out of memory.\n");
 		}
 		move(next_step);
 	}
@@ -86,7 +88,9 @@ attack(t_pos const * enemy) {
 		if (next_step.x == -2) {
 			plist_destroy(available_pos);
 			free(available_pos);
-			perror_exit("Out of memory.\n");
+			clear_actual_pos();
+			sem_op(MAP_SEM, 1, 0);
+			error_exit("Out of memory.\n");
 		}
 		move(next_step);
 		plist_sort(available_pos, by_dist, &closest_ally_pos);

@@ -2,7 +2,7 @@
 
 void
 sig_handler(int signal) {
-	printf("Catching singnal: %i\n", signal);
+	printf("Catching signal: %i\n", signal);
 	if (g_player.team == DISPLAY) {
 		printf("Map display abort.\n");
 		if (g_player.is_my_turn)
