@@ -6,7 +6,7 @@ t_player	g_player;
 int main(int ac, char ** av) { (void)ac, (void)av;
 	shm_init();
 	t_pos start = {0, 0};
-	t_pos end = {4, 4};
+	t_pos end = {0, 0};
 	t_pos next_step = astar(&start, &end);
 	printf("Next Step x %i y %i\n", next_step.x, next_step.y);
 	/*

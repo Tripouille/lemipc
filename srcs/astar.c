@@ -48,6 +48,8 @@ astar(t_pos const *start, t_pos const * end) {
 	t_nlist			open_nlist;
 	t_nlist			closed_nlist;
 
+	if (start->x == end->x && start->y == end->y)
+		return (*start);
 	nlist_initialize(&open_nlist);
 	nlist_initialize(&closed_nlist);
 	if (nlist_push(&open_nlist, create_node(*start, NULL)) == NULL)
