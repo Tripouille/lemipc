@@ -102,10 +102,7 @@ static void
 think(void) {
 	t_pos		enemy_pos = scan(&g_player.pos, max(MAP_Y, MAP_X), is_valuable_enemy);
 
-	printf("Player x %i y %i scanning for valuable enemy !\n", g_player.pos.x, g_player.pos.y);
-	if (enemy_pos.x == -1)
-		printf("No valuable enemy detected.\n");
-	else
+	if (enemy_pos.x != -1)
 		attack(&enemy_pos);
 }
 

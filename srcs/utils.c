@@ -13,16 +13,22 @@ max(ssize_t value1, ssize_t value2) {
 void
 error_exit(char const * msg) {
 	write(2, msg, strlen(msg));
-	shm_destroy();
-	sem_destroy();
+	if (one_team_won()) {
+		sem_destroy();
+		shm_destroy();
+		msg_destroy();
+	}
 	exit(1);
 }
 
 void
 perror_exit(char const * msg) {
 	perror(msg);
-	shm_destroy();
-	sem_destroy();
+	if (one_team_won()) {
+		sem_destroy();
+		shm_destroy();
+		msg_destroy();
+	}
 	exit(1);
 }
 
