@@ -2,6 +2,6 @@
 # define ASTAR_H
 # include "nlist.h"
 
-t_node * astar(t_pos * start, t_pos * end);
+t_pos astar(t_pos const * start, t_pos const * end);
 
 #endif

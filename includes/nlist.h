@@ -38,9 +38,6 @@ void nlist_destroy(t_nlist *nlist);
 bool nlist_contain(t_nlist *nlist, t_node needle);
 bool nlist_is_empty(t_nlist *nlist);
 /* nlist_sort.c */
-void nlist_sort(t_nlist * nlist, bool (*comp)(t_node * a, t_node * b, t_node * target),
-				t_node * target);
-bool by_score(t_node * a, t_node * b, t_node * target);
-
+void nlist_sort(t_nlist * nlist);
 
 #endif

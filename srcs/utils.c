@@ -11,7 +11,7 @@ max(ssize_t value1, ssize_t value2) {
 }
 
 void
-error_exit(char const *msg) {
+error_exit(char const * msg) {
 	write(2, msg, strlen(msg));
 	shm_destroy();
 	sem_destroy();
@@ -19,7 +19,7 @@ error_exit(char const *msg) {
 }
 
 void
-perror_exit(char const *msg) {
+perror_exit(char const * msg) {
 	perror(msg);
 	shm_destroy();
 	sem_destroy();
@@ -27,6 +27,6 @@ perror_exit(char const *msg) {
 }
 
 double
-dist(t_pos * start, t_pos * end) {
+dist(t_pos const * start, t_pos const * end) {
 	return (sqrt(pow(start->x - end->x, 2) + pow(start->y - end->y, 2)));
 }

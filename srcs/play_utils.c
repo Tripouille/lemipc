@@ -22,39 +22,39 @@ im_dead(void) {
 }
 
 bool
-is_empty(t_pos * pos) {
+is_empty(t_pos const * pos) {
 	char map_value = g_ipc.shm[pos_to_indice(pos)];
 	return (map_value == MAP_EMPTY);
 }
 
 bool
-is_enemy(t_pos * pos) {
+is_enemy(t_pos const * pos) {
 	char map_value = g_ipc.shm[pos_to_indice(pos)];
 	return (map_value != g_player.team && map_value != MAP_EMPTY);
 }
 
 bool
-is_valuable_enemy(t_pos * pos) {
+is_valuable_enemy(t_pos const * pos) {
 	return (is_enemy(pos) && at_range(pos, is_ally) < 2
 	&& ((at_range(pos, is_ally) && at_range(pos, is_empty))
 		|| at_range(pos, is_empty) > 1));
 }
 
 bool
-is_ally(t_pos * pos) {
+is_ally(t_pos const * pos) {
 	char map_value = g_ipc.shm[pos_to_indice(pos)];
 	return (map_value == g_player.team
 	&& !(pos->x == g_player.pos.x && pos->y == g_player.pos.y));
 }
 
 size_t
-pos_is_in_map(t_pos * pos) {
+pos_is_in_map(t_pos const * pos) {
 	return (pos->x >= 0 && pos->x < MAP_X
 	&& pos->y >= 0 && pos->y < MAP_Y);
 }
 
 size_t
-pos_to_indice(t_pos * pos) {
+pos_to_indice(t_pos const * pos) {
 	return (pos->y * MAP_X + pos->x);
 }
 
@@ -69,7 +69,7 @@ team_won(void) {
 }
 
 int
-at_range(t_pos *target, bool (*is_required_type)(t_pos * pos)) {
+at_range(t_pos const * target, bool (*is_required_type)(t_pos const * pos)) {
 	int		result = 0;
 	t_pos	posible_pos[8] = {
 		{target->x, target->y + 1},
@@ -89,7 +89,7 @@ at_range(t_pos *target, bool (*is_required_type)(t_pos * pos)) {
 }
 
 t_plist *
-get_available_pos_at_range(t_pos *target) {
+get_available_pos_at_range(t_pos const * target) {
 	t_pos	posible_pos[8] = {
 		{target->x, target->y + 1},
 		{target->x, target->y - 1},

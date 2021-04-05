@@ -76,22 +76,22 @@ t_pos map_get_random_pos(void);
 /* utils.c */
 ssize_t min(ssize_t value1, ssize_t value2);
 ssize_t max(ssize_t value1, ssize_t value2);
-void error_exit(char const *msg);
-void perror_exit(char const *msg);
-double dist(t_pos * start, t_pos * end);
+void error_exit(char const * msg);
+void perror_exit(char const * msg);
+double dist(t_pos const * start, t_pos const * end);
 /* signal.c */
 void sig_handler(int signal);
 /* play.c */
 void play(void);
 /* play_utils.c */
 bool im_dead(void);
-bool is_empty(t_pos * pos);
-bool is_enemy(t_pos * pos);
-bool is_valuable_enemy(t_pos * pos);
-bool is_ally(t_pos * pos);
-size_t pos_is_in_map(t_pos * pos);
-size_t pos_to_indice(t_pos * pos);
+bool is_empty(t_pos const * pos);
+bool is_enemy(t_pos const * pos);
+bool is_valuable_enemy(t_pos const * pos);
+bool is_ally(t_pos const * pos);
+size_t pos_is_in_map(t_pos const * pos);
+size_t pos_to_indice(t_pos const * pos);
 bool team_won(void);
-int at_range(t_pos *target, bool (*is_required_type)(t_pos * pos));
-t_plist * get_available_pos_at_range(t_pos *target);
+int at_range(t_pos const *target, bool (*is_required_type)(t_pos const * pos));
+t_plist * get_available_pos_at_range(t_pos const * target);
 #endif

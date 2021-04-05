@@ -17,7 +17,7 @@ init_pos(void) {
 }
 
 static t_pos
-scan(t_pos * pos, int max_range, bool (*is_valid_target)(t_pos *)) {
+scan(t_pos const * pos, int max_range, bool (*is_valid_target)(t_pos const *)) {
 	for (int range = 1; range <= max_range; ++range) {
 		t_pos	start = {pos->x - range, pos->y - range};
 		for (; start.x < pos->x + range; ++start.x)
@@ -37,7 +37,7 @@ scan(t_pos * pos, int max_range, bool (*is_valid_target)(t_pos *)) {
 }
 
 static void
-contact_closest_ally(t_pos * ally, t_pos dest) {
+contact_closest_ally(t_pos const * ally, t_pos dest) {
 
 	printf("Contacting ally at pos x: %i, y: %i giving order x %i y %i\n", ally->x, ally->y, dest.x, dest.y);
 	t_msg	msg;
@@ -57,7 +57,7 @@ move(t_pos new_pos) {
 }
 
 static void
-attack(t_pos * enemy) {
+attack(t_pos const * enemy) {
 	printf("Enemy at pos x: %i, y: %i\n", enemy->x, enemy->y);
 	t_pos		closest_ally_pos = scan(enemy, max(MAP_Y, MAP_X), is_ally);
 	t_plist * 	available_pos = get_available_pos_at_range(enemy);
