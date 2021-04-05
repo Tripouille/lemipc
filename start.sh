@@ -1,6 +1,10 @@
 #!/bin/bash
 make
-./lemipc 1 &
-./lemipc 2 &
-./lemipc 3 &
-./lemipc
+./lemipc &
+./lemipc 1 1>/dev/null &
+./lemipc 2 1>/dev/null &
+./lemipc 3 1>/dev/null &
+./lemipc 1 1>/dev/null &
+./lemipc 2 1>/dev/null &
+./lemipc 3 1>/dev/null &
+./lemipc 1 1>/dev/null &

@@ -68,11 +68,11 @@ attack(t_pos const * enemy) {
 	if (at_range(enemy, is_ally)) {
 		plist_sort(available_pos, by_dist, &g_player.pos);
 		printf("Yeah! I'm gonna help my ally going x %i y %i\n", available_pos->head->pos.x, available_pos->head->pos.y);
-		move(plist_shift(available_pos));
+		move(astar(g_player.pos, plist_shift(available_pos)));
 	}
 	else if (closest_ally_pos.x != -1) {
 		plist_sort(available_pos, by_dist, &g_player.pos);
-		move(plist_shift(available_pos));
+		move(astar(g_player.pos, plist_shift(available_pos)));
 		plist_sort(available_pos, by_dist, &closest_ally_pos);
 		contact_closest_ally(&closest_ally_pos, plist_shift(available_pos));
 	}
@@ -96,10 +96,11 @@ think(void) {
 void
 play(void) {
 	init_pos();
-	sleep(PLAYER_WARMUP);
+	usleep(PLAYER_WARMUP);
 
 	while (1) {
 		sem_op(MAP_SEM, -1, 0);
+		g_player.is_my_turn = true;
 		//Turn start
 		if (team_won()) {
 			printf("My team WON!\n");
@@ -114,7 +115,7 @@ play(void) {
 		else if (msg_receive()) {
 			t_pos	receive_pos = {((int*)g_player.msg)[2], ((int*)g_player.msg)[3]};
 			printf("Order receive: x %i y %i\n", receive_pos.x,  receive_pos.y);
-			move(receive_pos);
+			move(astar(g_player.pos, receive_pos));
 		}
 		else if (at_range(&g_player.pos, is_enemy)) {
 			printf("I'm fighting!\n");
@@ -123,7 +124,8 @@ play(void) {
 			think();
 		//Turn end
 		sem_op(MAP_SEM, 1, 0);
-		sleep(PLAYER_CD);
+		g_player.is_my_turn = false;
+		usleep(PLAYER_CD);
 	}
 	sem_op(MAP_SEM, 1, 0);
 }

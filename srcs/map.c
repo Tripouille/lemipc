@@ -11,9 +11,10 @@ map_display(void) {
 	char * map = g_ipc.shm;
 	g_player.pos.x = -1;
 
-	sleep(PLAYER_WARMUP);
+	usleep(PLAYER_WARMUP);
 	while (1) {
 		sem_op(MAP_SEM, -1, 0);
+		g_player.is_my_turn = true;
 		if (map_is_empty()) {
 			printf("Map is empty.\n");
 			sem_op(MAP_SEM, 1, 0);
@@ -25,7 +26,8 @@ map_display(void) {
 			write(1, "\n", 1);
 		}
 		sem_op(MAP_SEM, 1, 0);
-		sleep(DISPLAY_CD);
+		g_player.is_my_turn = false;
+		usleep(DISPLAY_CD);
 	}
 	return (0);
 }

@@ -18,9 +18,9 @@
 # include "astar.h"
 
 
-# define PLAYER_CD			2
-# define DISPLAY_CD			2
-# define PLAYER_WARMUP		5
+# define PLAYER_WARMUP		3000000
+# define PLAYER_CD			2000000
+# define DISPLAY_CD			1000000
 
 # define BUFFER_SIZE	(sizeof(long) * 2)
 # define KEY			0x42
@@ -46,6 +46,7 @@ typedef struct	s_player
 	char		team;
 	t_pos		pos;
 	char		msg[BUFFER_SIZE];
+	bool		is_my_turn;
 }				t_player;
 
 typedef struct	s_msg
