@@ -22,7 +22,7 @@
 # define PLAYER_CD			2000000
 # define DISPLAY_CD			20000
 
-# define BUFFER_SIZE	(sizeof(long) * 2)
+# define BUFFER_SIZE	(sizeof(long) + sizeof(t_pos))
 # define KEY			0x42
 # define MAP_X			10
 # define MAP_Y			10
